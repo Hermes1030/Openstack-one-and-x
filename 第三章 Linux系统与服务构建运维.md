@@ -1,0 +1,210 @@
+## 第三章 Linux系统与服务构建运维
+
+#### 3.5 LVM逻辑卷的使用
+
+###### 1.节点规划
+
+Linux操作系统单节点规划
+
+| IP             | 主机名    | 节点            |
+| -------------- | --------- | --------------- |
+| 192.168.200.10 | localhost | Linux服务器节点 |
+
+###### 2.基础准备
+
+​	记录网络编辑器内的各模式网卡信息
+
+​	在虚拟机内使用命令进入网络配置文件
+
+```
+[root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eno16777736
+```
+
+````
+BOOTTPROTO=static
+ONBOOT=yes
+IPADDR=192.168.200.10
+NETMASK=255.255.255.0
+GATEWAY=192.168.200.2
+````
+
+​	保存后，重启网络，查看IP
+
+```
+[root@localhost ~]# systemctl restart network
+```
+
+```
+[root@localhost ~]# ip ad
+```
+
+​	添加硬盘：
+
+​	打开虚拟机设置界面，添加硬盘（大小20G，将虚拟磁盘存储为单个文件）
+
+​	重启虚拟机，使用命令查看
+
+```
+lsblk
+```
+
+###### 3.LVM逻辑卷的使用
+
+​	创建物理卷之前，需要对磁盘进行分区。
+
+```
+fdisk /dev/sdb
+```
+
+| 参数 | 作用                   |
+| ---- | ---------------------- |
+| m    | 查看全部可用的参数     |
+| n    | 添加新的分区           |
+| d    | 删除某个分区信息       |
+| l    | 列出所有可用的分区类型 |
+| t    | 改变某个分区的类型     |
+| p    | 查看分区信息           |
+| w    | 保存退出               |
+| q    | 不保存退出             |
+
+```
+Welcome to fdisk (util-linux 2.23.2). Changes will remain in memory only, until you decide to write them. Be careful before using the write command. Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0x9e46a7c2. Command (m for help): p
+Disk /dev/sdb: 21.5 GB, 21474836480 bytes, 41943040 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x9e46a7c2
+Device Boot Start End Blocks Id System
+Command (m for help): n
+Partition type:
+p primary (0 primary, 0 extended, 4 free)
+e extended
+Select (default p): p
+Partition number (1-4, default 1):
+First sector (2048-41943039, default 2048):
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-41943039, default 41943039): +5G
+Partition 1 of type Linux and of size 5 GiB is set
+Command (m for help): n
+Partition type:
+p primary (1 primary, 0 extended, 3 free)
+e extended
+Select (default p): p
+Partition number (2-4, default 2):
+First sector (10487808-41943039, default 10487808):
+Using default value 10487808
+Last sector, +sectors or +size{K,M,G} (10487808-41943039, default 41943039): +5G
+Partition 2 of type Linux and of size 5 GiB is set
+Command (m for help): p
+Disk /dev/sdb: 21.5 GB, 21474836480 bytes, 41943040 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x9e46a7c2
+Device Boot Start End Blocks Id System
+/dev/sdb1 2048 10487807 5242880 83 Linux
+/dev/sdb2 10487808 20973567 5242880 83 Linux
+Command (m for help): w
+The partition table has been altered!
+Calling ioctl() to re-read partition table. Syncing disks.
+```
+
+​	查看系统的磁盘（list block）
+
+```
+lsblk
+```
+
+​	分区完成后，对两个分区进行创建物理卷操作
+
+```
+pvcreate /dev/sdb1 /dev/sdb2
+```
+
+​	查看物理卷简单信息
+
+```
+pvs
+```
+
+​	查看物理卷详细信息
+
+```
+pvdisplay
+```
+
+​	创建卷组
+
+```
+vscreate myvg /dev/sdb[1-2]
+```
+
+​	查看卷组简单信息
+
+```
+vgs
+```
+
+​	查看卷组详细信息
+
+```
+vgdisplay
+```
+
+​	删除卷组
+
+```
+vgremove myvg
+```
+
+​	重新创建卷组，指定PE大小为16MB
+
+```
+vgcreate -s 16m myvg /dev/sdb[1-2]
+```
+
+​	添加一个sdb3分区，添加到myvg物理卷中
+
+```
+vgextend myvg /dev/sdb3
+```
+
+​	扩展逻辑卷（mylv，5GB）
+
+```
+lvcreate -L +5G -n mylv myvg
+```
+
+​	查看逻辑卷
+
+```
+lvs
+```
+
+​	扫描上一步创建的lv逻辑卷
+
+```
+lvscan
+```
+
+​	使用ext4文件系统格式化逻辑卷mylv
+
+```
+mkfs.ext4 /dev/mapper/myvg-mylv
+```
+
+​	挂载到 /mnt 下验证
+
+```
+mount /dev/mapper/myvg-mylv /mnt
+```
+
+```
+df -h
+```
+
+​	
+
