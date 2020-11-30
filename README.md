@@ -1,1 +1,0 @@
-# Openstack-one-and-X
