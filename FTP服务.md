@@ -19,7 +19,7 @@ vi /etc/vsftpd.conf
 ```
 anon_root=/opt
 ```
-
+重启服务：
 ```
 systemctl start vsftpd
 ```
