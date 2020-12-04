@@ -18,6 +18,7 @@ cd lnmp1.6-full
 ####  三、运行脚本
 ```
 ./install.sh
+```
 #### 四、WordPress的部署
 ```
 mysql -uroot -p000000
@@ -40,6 +41,7 @@ cd /home/wwwroot/default
 ```
 ```
 rm -rf index.html
+```
 ```
 cd /root/wordpress
 ```
