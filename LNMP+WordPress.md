@@ -30,7 +30,7 @@ create database wordpress;
 grant all privileges on *.* to root@localhost identified by '000000' with grant option;
 ```
 ```
-grant all privileges on *.* root@"%" identified by '000000'with grant option;
+grant all privileges on *.* to root@"%" identified by '000000' with grant option;
 ```
 #### 五、上传软件包
 ```
