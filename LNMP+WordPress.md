@@ -54,7 +54,7 @@ cd /home/wwwroot/default
 ```
 chmod 777 *
 ```
-###### 在/home/wwwroot/default/目录下，可以看见一个wp-config-sample.php配置文件,该文件是WordPress应用提供了一个模板配置文件，将该模板复制一份并改名为wp-config.php
+在/home/wwwroot/default/目录下，可以看见一个wp-config-sample.php配置文件,该文件是WordPress应用提供了一个模板配置文件，将该模板复制一份并改名为wp-config.php
 ```
 cp wp-config-sample.php wp-config.php
 ```
