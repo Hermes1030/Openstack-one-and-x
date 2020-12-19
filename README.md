@@ -1,4 +1,4 @@
-# Openstack-one-and-X
+# Openstack-one-and-x
 
 网络管理题在套题里有其他类型可以补充。
 
