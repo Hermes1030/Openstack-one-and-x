@@ -27,7 +27,7 @@ systemctl start vsftpd
 ```
 systemctl enable vsftpd
 ```
-
+查看运行端口：
 ```
 netstat -ntpl
 ```
