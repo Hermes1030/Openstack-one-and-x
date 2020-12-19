@@ -1,34 +1,56 @@
-## 安装FTP服务
+## FTP安装与使用
 
-配置完YUM源后
-
-安装命令：
+#### 安装vsftpd服务[xserver1]
 
 ```
-yum install vsftpd -y
+yum install vsftpd net-tools -y
 ```
 
-更改配置文件：
+#### 编辑配置文件
 
 ```
-vi /etc/vsftpd.conf
+vi /etc/vsftpd/vsftpd.conf
 ```
-
-添加内容：
 
 ```
 anon_root=/opt
 ```
-重启服务：
-```
-systemctl start vsftpd
-```
+
+#### 启动服务
 
 ```
-systemctl enable vsftpd
+systemctl start vsftpd; systemctl enable vstpd
 ```
-查看运行端口：
+
+#### 提交查询结果
+
 ```
 netstat -ntpl
 ```
+
+```
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address Foreign Address State PID/Program name
+tcp 0 0 0.0.0.0:22 0.0.0.0:* LISTEN 1480/sshd
+tcp 0 0 127.0.0.1:25 0.0.0.0:* LISTEN 2622/master
+tcp6 0 0 :::21 :::* LISTEN 2804/vsftpd
+tcp6 0 0 :::22 :::* LISTEN 1480/sshd
+tcp6 0 0 ::1:25 :::* LISTEN 2622/master
+```
+
+#### 配置FTP客户端[xserver2]
+
+```
+vi /etc/yum.repos.d/ftp.repo
+```
+
+```
+[ftp]
+name=ftp
+baseurl=ftp://192.168.100.20/centos
+gpgcheck=0
+enabled=1
+```
+
+
 
