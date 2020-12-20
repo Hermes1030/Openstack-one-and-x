@@ -33,6 +33,9 @@ showmount -e 192.168.200.10
 ```
 8）在client端挂在共享命令
 ```
+yum install -y nfs-utils
+```
+```
 mount -t nfs 192.168.200.10:/mnt/test /mnt
 ```
 ```
