@@ -11,3 +11,5 @@
 2020年12月21日
 
 准备docker搞起
+
+|nfs配置|nfs-utils rpcbind|
