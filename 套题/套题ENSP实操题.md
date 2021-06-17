@@ -185,7 +185,6 @@ AC配置：
 [AC6005]vlan batch 20
 [AC6005]dhcp enable
 [AC6005]interface vlanif 20
-[AC6005-Vlanif20]description USER
 [AC6005-Vlanif20]ip address 172.16.20.1 24
 [AC6005-Vlanif20]dhcp select interface
 [AC6005-Vlanif20]dhcp server dns-list 114.114.114.114 223.5.5.5
