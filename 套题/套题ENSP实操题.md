@@ -134,15 +134,63 @@ ip route-static 192.168.2.0 24 12.12.12.1
 
 
 
+--------------
+
+中级 A卷：
+1.路由器管理(40分)
+配置R1和R2路由器（路由器使用R2220），R1路由器配置端口g0/0/1地址为192.168.1.1/30，端口g0/0/1连接R2路由器。配置端口g0/0/2地址为192.168.2.1/24，作为内部PC1机网关地址。R2路由器配置端口g0/0/1地址为192.168.1.2/30，端口g0/0/1连接R1路由器，配置端口g0/0/2地址为192.168.3.1/24，作为内部PC2机网关地址。R1和R2路由器启用OSPF动态路由协议自动学习路由。使PC1和PC2可以相互访问。（所有配置命令使用完整命令）将上述所有操作命令及返回结果以文本形式提交到答题框。
+
+ 
+ 
+R1配置:
+```
+<Huawei>system-view
+[Huawei]sysname R1
+[R1]interface GigabitEthernet 0/0/1
+[R1-GigabitEthernet0/0/1]ip address 192.168.1.1 30
+[R1-GigabitEthernet0/0/1]quit
+[R1]interface GigabitEthernet 0/0/2
+[R1-GigabitEthernet0/0/2]ip address 192.168.2.1 24
+[R1-GigabitEthernet0/0/2]quit
+[R1]ospf 1
+[R1-ospf-1]area 0
+[R1-ospf-1-area-0.0.0.0]network 192.168.1.0 0.0.0.3
+[R1-ospf-1-area-0.0.0.0]network 192.168.2.0 0.0.0.255
+```
+
+R2配置:
+```
+<Huawei>system-view
+[Huawei]sysname R2
+[R2]interface GigabitEthernet 0/0/1
+[R2-GigabitEthernet0/0/1]ip address 192.168.1.2 30
+[R2-GigabitEthernet0/0/1]quit
+[R2]interface GigabitEthernet 0/0/2
+[R2-GigabitEthernet0/0/2]ip address 192.168.3.1 24
+[R2-GigabitEthernet0/0/2]quit
+[R2]ospf 1
+[R2-ospf-1]area 0
+[R2-ospf-1-area-0.0.0.0]network 192.168.1.0 0.0.0.3
+[R2-ospf-1-area-0.0.0.0]network 192.168.3.0 0.0.0.255
+```
+
+2.无线AC管理(40分)
+配置无线AC控制器（型号使用AC6005），开启dhcp功能，设置vlan20网关地址为172.16.20.1/24，并配置vlan20接口服务器池，设置dhcp分发dns为114.114.114.114、223.5.5.5。将上述所有操作命令及返回结果以文本形式提交到答题框。
 
 
-
-
-
-
-
-
-
+AC配置：
+```
+<AC6005>system-view
+[AC6005]vlan batch 10
+[AC6005]vlan batch 20
+[AC6005]dhcp enable
+[AC6005]interface vlanif 20
+[AC6005-Vlanif20]description USER
+[AC6005-Vlanif20]ip address 172.16.20.1 24
+[AC6005-Vlanif20]dhcp select interface
+[AC6005-Vlanif20]dhcp server dns-list 114.114.114.114 223.5.5.5
+[AC6005-Vlanif20]quit
+```
 
 
 
